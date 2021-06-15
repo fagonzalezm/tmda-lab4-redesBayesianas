@@ -9,6 +9,14 @@ summary(bn_df)
 # Los datos son factores de hasta 5 niveles
 
 #
+DrivingSkill <- bn_df$DrivSkill
+drivQuality <- bn_df$DrivQuelity
+
+DrivingSkill <- factor(bn_df$DrivingSkill, levels=c("SubStandard","Normal","Expert"), labels=c(1,2,3))
+DrivQuality <- factor(bn_df$DrivQuality, levels=c("Poor","Normal","Excellent"), labels=c(1,2,3))
+data.cor <- chisq.test(DrivingSkill, DrivQuality)
+print(data.cor)
+
 bn_df <- bn_df[,-13] # Se elimina drivSkill porque es muy parecido a drivQuality, es redundante
 bn_df <- bn_df[,-15] # Se elimina Theft porque son casi puros false
 
@@ -98,48 +106,48 @@ res.fitted
 # a) ¿Ruggeduto, Antilock, Cushioning y Airbag influyen en severidad de accidentes?
 #
 #Funciona al revés de lo esperado
-cpquery(res.fitted,evidence = (RuggedAuto == "Tank"),event = (Accident == "None"))
-cpquery(res.fitted,evidence = (RuggedAuto == "Football"),event = (Accident == "None"))
-cpquery(res.fitted,evidence = (RuggedAuto == "EggShell"),event = (Accident == "None"))
+cpquery(res.fitted,evidence = (RuggedAuto == "Tank"),event = (Accident == "None"))      # 0.662248
+cpquery(res.fitted,evidence = (RuggedAuto == "Football"),event = (Accident == "None"))  # 0.7229405
+cpquery(res.fitted,evidence = (RuggedAuto == "EggShell"),event = (Accident == "None"))  # 0.7281314
 
-cpquery(res.fitted,evidence = (Antilock == "True"),event = (Accident == "None"))
-cpquery(res.fitted,evidence = (Antilock == "False"),event = (Accident == "None"))
+cpquery(res.fitted,evidence = (Antilock == "True"),event = (Accident == "None"))        # 0.7747475
+cpquery(res.fitted,evidence = (Antilock == "False"),event = (Accident == "None"))       # 0.7051005
 
 # Funciona al revés de lo esperado
-cpquery(res.fitted,evidence = (Cushioning == "Excellent"),event = (Accident == "None"))
-cpquery(res.fitted,evidence = (Cushioning == "Good"),event = (Accident == "None"))
-cpquery(res.fitted,evidence = (Cushioning == "Fair"),event = (Accident == "None"))
-cpquery(res.fitted,evidence = (Cushioning == "Poor"),event = (Accident == "None"))
+cpquery(res.fitted,evidence = (Cushioning == "Excellent"),event = (Accident == "None")) # 0.6929825
+cpquery(res.fitted,evidence = (Cushioning == "Good"),event = (Accident == "None"))      # 0.7125066
+cpquery(res.fitted,evidence = (Cushioning == "Fair"),event = (Accident == "None"))      # 0.7307078
+cpquery(res.fitted,evidence = (Cushioning == "Poor"),event = (Accident == "None"))      # 0.7315341
 
-cpquery(res.fitted,evidence = (Airbag == "True"),event = (Accident == "None"))
-cpquery(res.fitted,evidence = (Airbag == "False"),event = (Accident == "None"))
+cpquery(res.fitted,evidence = (Airbag == "True"),event = (Accident == "None"))          # 0.7313573
+cpquery(res.fitted,evidence = (Airbag == "False"),event = (Accident == "None"))         # 0.7107742
 
 # Se estudia RuggedAuto
-cpquery(res.fitted,evidence = (RuggedAuto == "Tank"),event = (Accident == "None"))
-cpquery(res.fitted,evidence = (RuggedAuto == "Tank"),event = (Accident == "Mild"))
-cpquery(res.fitted,evidence = (RuggedAuto == "Tank"),event = (Accident == "Moderate"))
-cpquery(res.fitted,evidence = (RuggedAuto == "Tank"),event = (Accident == "Severe"))
+cpquery(res.fitted,evidence = (RuggedAuto == "Tank"),event = (Accident == "None"))      # 0.6523711
+cpquery(res.fitted,evidence = (RuggedAuto == "Tank"),event = (Accident == "Mild"))      # 0.08074534
+cpquery(res.fitted,evidence = (RuggedAuto == "Tank"),event = (Accident == "Moderate"))  # 0.0941704
+cpquery(res.fitted,evidence = (RuggedAuto == "Tank"),event = (Accident == "Severe"))    # 0.1767347
 
-cpquery(res.fitted,evidence = (RuggedAuto == "Football"),event = (Accident == "None"))
-cpquery(res.fitted,evidence = (RuggedAuto == "Football"),event = (Accident == "Mild"))
-cpquery(res.fitted,evidence = (RuggedAuto == "Football"),event = (Accident == "Moderate"))
-cpquery(res.fitted,evidence = (RuggedAuto == "Football"),event = (Accident == "Severe"))
+cpquery(res.fitted,evidence = (RuggedAuto == "Football"),event = (Accident == "None"))          # 0.7163692
+cpquery(res.fitted,evidence = (RuggedAuto == "Football"),event = (Accident == "Mild"))          # 0.09117027
+cpquery(res.fitted,evidence = (RuggedAuto == "Football"),event = (Accident == "Moderate"))      # 0.07062844
+cpquery(res.fitted,evidence = (RuggedAuto == "Football"),event = (Accident == "Severe"))        # 0.1141561
 
-cpquery(res.fitted,evidence = (RuggedAuto == "EggShell"),event = (Accident == "None"))
-cpquery(res.fitted,evidence = (RuggedAuto == "EggShell"),event = (Accident == "Mild"))
-cpquery(res.fitted,evidence = (RuggedAuto == "EggShell"),event = (Accident == "Moderate"))
-cpquery(res.fitted,evidence = (RuggedAuto == "EggShell"),event = (Accident == "Severe"))
+cpquery(res.fitted,evidence = (RuggedAuto == "EggShell"),event = (Accident == "None"))          # 0.7293622
+cpquery(res.fitted,evidence = (RuggedAuto == "EggShell"),event = (Accident == "Mild"))          # 0.09044552
+cpquery(res.fitted,evidence = (RuggedAuto == "EggShell"),event = (Accident == "Moderate"))      # 0.0772123
+cpquery(res.fitted,evidence = (RuggedAuto == "EggShell"),event = (Accident == "Severe"))        # 0.1153485
 
 # Poniendo los factores que tienen resultados distintos a los esperados baja aún mas la probabilidad que muestra el modelo para que el accidente tenga menos gravedad
-cpquery(res.fitted,evidence = (RuggedAuto == "Tank" & Cushioning == "Excellent"),event = (Accident == "None"))
-cpquery(res.fitted,evidence = (RuggedAuto == "Tank" & Cushioning == "Excellent"),event = (Accident == "Mild"))
-cpquery(res.fitted,evidence = (RuggedAuto == "Tank" & Cushioning == "Excellent"),event = (Accident == "Moderate"))
-cpquery(res.fitted,evidence = (RuggedAuto == "Tank" & Cushioning == "Excellent"),event = (Accident == "Severe"))
+cpquery(res.fitted,evidence = (RuggedAuto == "Tank" & Cushioning == "Excellent"),event = (Accident == "None"))          # 0.6927224
+cpquery(res.fitted,evidence = (RuggedAuto == "Tank" & Cushioning == "Excellent"),event = (Accident == "Mild"))          # 0.07061959
+cpquery(res.fitted,evidence = (RuggedAuto == "Tank" & Cushioning == "Excellent"),event = (Accident == "Moderate"))      # 0.07762557
+cpquery(res.fitted,evidence = (RuggedAuto == "Tank" & Cushioning == "Excellent"),event = (Accident == "Severe"))        # 0.1558785
 
-cpquery(res.fitted,evidence = (RuggedAuto == "EggShell" & Cushioning == "Poor"),event = (Accident == "None"))
-cpquery(res.fitted,evidence = (RuggedAuto == "EggShell" & Cushioning == "Poor"),event = (Accident == "Mild"))
-cpquery(res.fitted,evidence = (RuggedAuto == "EggShell" & Cushioning == "Poor"),event = (Accident == "Moderate"))
-cpquery(res.fitted,evidence = (RuggedAuto == "EggShell" & Cushioning == "Poor"),event = (Accident == "Severe"))
+cpquery(res.fitted,evidence = (RuggedAuto == "EggShell" & Cushioning == "Poor"),event = (Accident == "None"))           # 0.7322335
+cpquery(res.fitted,evidence = (RuggedAuto == "EggShell" & Cushioning == "Poor"),event = (Accident == "Mild"))           # 0.09442891
+cpquery(res.fitted,evidence = (RuggedAuto == "EggShell" & Cushioning == "Poor"),event = (Accident == "Moderate"))       # 0.07302659
+cpquery(res.fitted,evidence = (RuggedAuto == "EggShell" & Cushioning == "Poor"),event = (Accident == "Severe"))         # 0.1083924
 
 #
 # b) ¿Ruggeduto, Antilock, Cushioning y Airbag influyen en RiskAversion?
