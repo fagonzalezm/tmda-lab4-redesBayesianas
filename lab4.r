@@ -1,5 +1,6 @@
 require(bnlearn)
 require(bnviewer)
+require(ggplot2)
 
 bn_df <- data.frame(insurance)
 summary(bn_df)
@@ -8,10 +9,14 @@ summary(bn_df)
 # Datos categóricos
 # Los datos son factores de hasta 5 niveles
 
-#
-DrivingSkill <- bn_df$DrivSkill
-drivQuality <- bn_df$DrivQuelity
+# Preprocesamiento
 
+# Histograma Theft
+p <- ggplot(data = bn_df)
+p <- p + geom_bar(aes(x=Theft))
+p
+
+# Relación entre DrivSkill y DrivQuality
 DrivingSkill <- factor(bn_df$DrivingSkill, levels=c("SubStandard","Normal","Expert"), labels=c(1,2,3))
 DrivQuality <- factor(bn_df$DrivQuality, levels=c("Poor","Normal","Excellent"), labels=c(1,2,3))
 data.cor <- chisq.test(DrivingSkill, DrivQuality)
@@ -37,12 +42,12 @@ viewer(hc,
 )
 
 hc.sc<-score(hc,bn_df) # BIC por default
-print(hc.sc)
+print(hc.sc) # -263255.5
 
 # mmhc
 mmhc<-mmhc(bn_df)
 mmhc.sc <- score(mmhc,bn_df)
-print(mmhc.sc)
+print(mmhc.sc) # -277885.8
 viewer(mmhc,
        bayesianNetwork.width = "100%",
        bayesianNetwork.height = "80vh",
@@ -74,7 +79,7 @@ viewer(mmpc,
                                            border = "#008f39"))
 )
 
-# hc tiene mator BIC, se elige ese método
+# hc tiene mayor BIC, se elige ese método
 # Se creó una blacklist a partir del modelo hc y conocimiento sobre el problema.
 bl <- matrix(c("ThisCarCost","ThisCarDam","ThisCarDam","ThisCarCost","MedCost","ThisCarDam","MakeModel","VehicleYear","VehicleYear","MakeModel","VehicleYear","RiskAversion","RiskAversion","VehicleYear","SocioEcon","OtherCar","OtherCar","SocioEcon","RuggedAuto","MakeModel","MakeModel","OtherCar","OtherCar","MakeModel","Mileage","ThisCarDam","ThisCarDam","Mileage","RiskAversion","HomeBase","Airbag","Cushioning","Cushioning","Airbag"),ncol=2,byrow=TRUE)
 print(bl)
